@@ -1,0 +1,18 @@
+[
+    {
+      "prompt": "Which setting controls motion blur?",
+      "options": ["ISO", "Aperture", "Shutter Speed"],
+      "correct": "Shutter Speed"
+    },
+    {
+      "prompt": "Which setting affects brightness most directly?",
+      "options": ["Aperture", "ISO", "Shutter Speed"],
+      "correct": "ISO"
+    },
+    {
+      "prompt": "Which setting controls depth of field?",
+      "options": ["Shutter Speed", "Aperture", "ISO"],
+      "correct": "Aperture"
+    }
+  ]
+  

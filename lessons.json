@@ -1,0 +1,22 @@
+[
+  {
+    "title": "ISO",
+    "content": "ISO controls how sensitive your camera is to light.",
+    "image": "/static/images/iso.jpg"
+  },
+  {
+    "title": "Shutter Speed",
+    "content": "Shutter speed affects motion blur.",
+    "image": "/static/images/shutter.jpg"
+  },
+  {
+    "title": "Aperture",
+    "content": "Aperture affects depth of field.",
+    "image": "/static/images/aperture.jpg"
+  },
+  {
+    "title": "Recap",
+    "content": "ISO = brightness, Shutter = motion, Aperture = blur.",
+    "image": "/static/images/triangle.jpg"
+  }
+]
