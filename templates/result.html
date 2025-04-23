@@ -1,33 +1,41 @@
 <!-- Sebastian Horta -->
 <!-- result.html -->
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Quiz Result</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
-</head>
-<body>
+{% extends 'base.html' %}
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">Exposure Triangle</a>
-    </div>
-  </nav>
+{% block title %}Quiz Result{% endblock %}
 
-  <!-- Result Content -->
-  <div class="container text-center my-5">
-    <div class="card p-4 shadow-lg">
-      <h2 class="fw-bold mb-3">Quiz Complete!</h2>
+{% block content %}
+<!-- Result Content -->
+<div class="text-center my-5">
+  <div class="card p-4 shadow-lg">
+    <h2 class="fw-bold mb-3">Quiz Complete!</h2>
+    
+    <div class="mb-4">
       <p class="lead">Your Score: <strong>{{ score }}</strong> / {{ total }}</p>
-      <a href="{{ url_for('home') }}" class="btn btn-primary mt-3">Return Home</a>
+      
+      {% if score == total %}
+        <div class="alert alert-success">
+          <h4>Perfect Score! 🎉</h4>
+          <p>Great job! You've mastered the exposure triangle concepts!</p>
+        </div>
+      {% elif score >= total//2 %}
+        <div class="alert alert-info">
+          <h4>Good Job! 👍</h4>
+          <p>You're on your way to understanding the exposure triangle!</p>
+        </div>
+      {% else %}
+        <div class="alert alert-warning">
+          <h4>Keep Learning! 📚</h4>
+          <p>Review the lessons again to strengthen your understanding.</p>
+        </div>
+      {% endif %}
+    </div>
+    
+    <div class="d-grid gap-2 col-md-6 mx-auto">
+      <a href="{{ url_for('learn', lesson_num=1) }}" class="btn btn-outline-primary">Review Lessons</a>
+      <a href="{{ url_for('home') }}" class="btn btn-primary">Return Home</a>
     </div>
   </div>
-
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
-</html>
+</div>
+{% endblock %}

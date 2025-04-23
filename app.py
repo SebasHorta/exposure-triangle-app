@@ -3,15 +3,23 @@
 
 from flask import Flask, render_template, request, redirect, url_for, session
 import json
+import os
 
 app = Flask(__name__)
 app.secret_key = 'super_secret_key'
 
-with open('data/lessons.json') as f:
-    lessons = json.load(f)
+# Load JSON data
+def load_json_data(filename):
+    with open(os.path.join('data', filename)) as f:
+        return json.load(f)
 
-with open('data/quiz.json') as f:
-    quiz = json.load(f)
+lessons = load_json_data('lessons.json')
+quiz = load_json_data('quiz.json')
+
+# Update image paths in lessons
+for lesson in lessons:
+    if 'image' in lesson and not lesson['image'].startswith('/static'):
+        lesson['image'] = url_for('static', filename=f"images/{os.path.basename(lesson['image'])}")
 
 @app.route('/')
 def home():
@@ -27,13 +35,37 @@ def learn(lesson_num):
 
 @app.route('/quiz/<int:question_num>', methods=['GET', 'POST'])
 def quiz_route(question_num):
+    # Initialize quiz_answers in session if it doesn't exist
+    if 'quiz_answers' not in session:
+        session['quiz_answers'] = []
+        
     if request.method == 'POST':
         answer = request.form.get('answer')
-        session['quiz_answers'].append(answer)
+        
+        # Store answer in session
+        quiz_answers = session.get('quiz_answers', [])
+        
+        # If we're submitting a previous question again, update that answer
+        current_index = question_num - 1
+        if current_index < len(quiz_answers):
+            quiz_answers[current_index] = answer
+        else:
+            quiz_answers.append(answer)
+            
+        session['quiz_answers'] = quiz_answers
+        
+        # Redirect to next question
+        next_question = question_num + 1
+        if next_question > len(quiz):
+            return redirect(url_for('result'))
+        else:
+            return redirect(url_for('quiz_route', question_num=next_question))
 
+    # Check if we've gone past the end of the quiz
     if question_num > len(quiz):
         return redirect(url_for('result'))
 
+    # Display the current question
     question = quiz[question_num - 1]
     return render_template('quiz.html', question=question, question_num=question_num)
 
@@ -49,7 +81,7 @@ def debug():
     return render_template("learn.html", lesson={
         "title": "Test ISO",
         "content": "This is a debug lesson.",
-        "image": "/static/images/iso.jpg"
+        "image": url_for('static', filename="images/iso.jpg")
     }, lesson_num=1)
 
 if __name__ == '__main__':
