@@ -1,47 +1,119 @@
-/* Sebastian Horta
-main.css */
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&display=swap');
 
-/* General styles */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f8f9fa;
+  margin: 0;
+  font-family: 'Josefin Sans', sans-serif;
+  background-color: #B3D4E0;  
   color: #212529;
 }
 
-/* Navbar styles */
-.navbar {
-  background-color: #343a40 !important;
+.main-nav {
+  background-color: #EEE;
+  border-bottom: 1px solid #CCC;
+  padding: 1rem 2rem;
+}
+.main-nav .nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 1rem;
+  text-decoration: none !important;
+}
+.main-nav .logo {
+  display: flex;
+  align-items: center;
+}
+.main-nav .logo .triangle {
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-bottom: 30px solid #000;
+  margin-right: 0.5rem;
+}
+.main-nav .logo .logo-text {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #000;
+}
+.main-nav .nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.main-nav .nav-links li {
+  display: inline-block;
+  margin-left: 2rem;
+}
+.main-nav .nav-links a {
+  position: relative;
+  text-decoration: none;
+  font-size: 1.25rem;
+  color: #444;
+  transition: color 0.2s;
+}
+.main-nav .nav-links a:hover {
+  color: #000;
+}
+.main-nav .nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: #000;
+  transition: all 0.3s ease;
+}
+.main-nav .nav-links a:hover::after {
+  left: 0;
+  width: 100%;
 }
 
-.navbar .navbar-brand {
-  color: #ffffff !important;
-  font-weight: bold;
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 1rem;
 }
-
-/* Hero card */
-.card {
-  border-radius: 16px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+.home-hero .exposure-triangle-img {
+  width: 500px;
+  max-width: 90%;    
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+  align-items: center;
 }
-
-.card img {
-  max-width: 100%;
-  height: auto;
+.home-hero .exposure-triangle-img:hover {
+  transform: scale(1.1);
 }
-
-/* Buttons */
-.btn {
-  padding: 0.75rem 1.5rem;
+.home-hero .hero-title {
+  font-size: 3.5rem;          
+  line-height: 1.1;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.home-hero .hero-text {
+  font-size: 1.4rem;          
+  max-width: 700px;
+  margin-bottom: 2.5rem;
+  color: #333;
+}
+.home-hero .hero-buttons {
+  display: flex;
+  gap: 2rem;
+}
+.home-hero .btn {
   font-size: 1.1rem;
-  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #000;
+  background: #fff;
+  color: #000;
+  border-radius: 0.3rem;
+  text-decoration: none;
+  transition: background 0.2s;
 }
-
-.btn-primary {
-  background-color: #007bff;
-  border: none;
+.home-hero .btn:hover {
+  background: #f0f0f0;
 }
-
-.btn-primary:hover {
-  background-color: #0056b3;
-} 

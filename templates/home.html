@@ -1,18 +1,27 @@
-<!-- Sebastian Horta -->
-<!-- home.html -->
-
 {% extends 'base.html' %}
 
 {% block title %}Mastering the Exposure Triangle{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<div class="text-center mt-5">
-  <div class="card p-4 shadow-lg">
-    <h1 class="display-5 fw-bold mb-3">Mastering the Exposure Triangle</h1>
-    <p class="lead mb-4">Take control of your photography by learning ISO, Shutter Speed, and Aperture.</p>
-    <img src="{{ url_for('static', filename='images/triangle.jpg') }}" alt="Exposure Triangle Diagram" class="img-fluid mb-4 rounded exposure-triangle-img">
-    <a href="{{ url_for('learn', lesson_num=1) }}" class="btn btn-primary btn-lg">Start Lesson</a>
+  <div class="home-hero">
+    <img
+      src="{{ url_for('static', filename='images/triangle.jpg') }}"
+      alt="Exposure Triangle Diagram"
+      class="exposure-triangle-img"
+    />
+
+    <h1 class="hero-title">
+      Mastering the<br/>
+      Exposure Triangle
+    </h1>
+
+    <p class="hero-text">
+      Text introducing the concept of mastering the exposure triangle and why it’s useful etc. etc.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="{{ url_for('learn', lesson_num=1) }}" class="btn">Start Now</a>
+      <a href="{{ url_for('quiz_route', question_num=1) }}" class="btn">Test Yourself</a>
+    </div>
   </div>
-</div>
 {% endblock %}
