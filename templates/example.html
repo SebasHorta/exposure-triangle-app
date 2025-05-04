@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+
+{% block title %}Example - {{ example.title }}{% endblock %}
+
+{% block content %}
+<div class="lesson-container">
+  <h1 class="lesson-title">Example - {{ example.title }}</h1>
+  
+  <div class="example-intro">
+    <div class="example-box">
+      <p>{{ example.intro }}</p>
+      <p class="scenario-description">{{ example.scenario }}</p>
+      <p class="thought-question">Thought: {{ example.thought_question }}</p>
+    </div>
+  </div>
+  
+  <div class="example-interactive">
+    <div class="interactive-image-container">
+      <div class="interactive-image" id="example-image">
+        <img src="{{ example.image }}" alt="{{ example.title }}" class="example-img">
+      </div>
+    </div>
+    
+    <div class="interactive-controls-panel">
+      <div class="slider-row">
+        <div class="slider-label">ISO:</div>
+        <div class="slider-container">
+          <input type="range" id="iso-slider" class="interactive-slider" 
+                 min="1" max="5" value="3" step="1">
+          <div class="slider-values">
+            {% for value in example.iso_values %}
+              <span>{{ value }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      
+      <div class="slider-row">
+        <div class="slider-label">Shutter Speed:</div>
+        <div class="slider-container">
+          <input type="range" id="shutter-slider" class="interactive-slider" 
+                 min="1" max="5" value="3" step="1">
+          <div class="slider-values">
+            {% for value in example.shutter_values %}
+              <span>{{ value }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      
+      <div class="slider-row">
+        <div class="slider-label">Aperture:</div>
+        <div class="slider-container">
+          <input type="range" id="aperture-slider" class="interactive-slider" 
+                 min="1" max="5" value="3" step="1">
+          <div class="slider-values">
+            {% for value in example.aperture_values %}
+              <span>{{ value }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="example-feedback">
+    <div id="settings-feedback" class="feedback-box">
+      Try adjusting the sliders to achieve the best settings for this scenario!
+    </div>
+  </div>
+  
+  <div class="lesson-nav">
+    <a href="{{ url_for('learn', lesson_num=3) }}" class="nav-btn">Back to Lessons</a>
+    <a href="{{ url_for('quiz_format') }}" class="nav-btn test-btn">Test Yourself</a>
+    <a href="{{ url_for('recap') }}" class="nav-btn next-btn">View Recap</a>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const isoSlider = document.getElementById('iso-slider');
+    const shutterSlider = document.getElementById('shutter-slider');
+    const aperturelider = document.getElementById('aperture-slider');
+    const exampleImage = document.getElementById('example-image');
+    const imageElement = exampleImage.querySelector('img');
+    const feedbackEl = document.getElementById('settings-feedback');
+    
+    // Create overlay div for effects
+    const overlay = document.createElement('div');
+    overlay.className = 'interactive-overlay';
+    Object.assign(overlay.style, {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      pointerEvents: 'none',
+      transition: 'all 0.3s ease'
+    });
+    exampleImage.appendChild(overlay);
+    
+    // Handle slider changes
+    const sliders = [isoSlider, shutterSlider, aperturelider];
+    sliders.forEach(slider => {
+      slider.addEventListener('input', updatePreview);
+    });
+    
+    // Initialize
+    updatePreview();
+    
+    function updatePreview() {
+      const isoValue = parseInt(isoSlider.value);
+      const shutterValue = parseInt(shutterSlider.value);
+      const apertureValue = parseInt(aperturelider.value);
+      
+      // Highlight active values
+      highlightValue('iso-slider', isoValue);
+      highlightValue('shutter-slider', shutterValue);
+      highlightValue('aperture-slider', apertureValue);
+      
+      // Apply combined effects
+      applyImageEffects(isoValue, shutterValue, apertureValue);
+      
+      // Update feedback
+      updateFeedback(isoValue, shutterValue, apertureValue);
+    }
+    
+    function highlightValue(sliderId, value) {
+      const valueSpans = document.querySelectorAll(`#${sliderId} + .slider-values span`);
+      if (valueSpans.length > 0) {
+        valueSpans.forEach((span, i) => {
+          if (i + 1 === value) {
+            span.style.fontWeight = 'bold';
+            span.style.fontSize = '1.1rem';
+            span.style.color = '#000';
+          } else {
+            span.style.fontWeight = 'normal';
+            span.style.fontSize = '0.9rem';
+            span.style.color = '#555';
+          }
+        });
+      }
+    }
+    
+    function applyImageEffects(iso, shutter, aperture) {
+      // Normalize values to 0-1 range
+      const isoNorm = (iso - 1) / 4;
+      const shutterNorm = (shutter - 1) / 4;
+      const apertureNorm = (aperture - 1) / 4;
+      
+      // ISO: Affects brightness and noise
+      const brightnessEffect = 0.7 + isoNorm * 0.8; // Range 0.7-1.5
+      
+      // Shutter: Affects motion blur
+      const blurAmount = Math.max(0, (1 - shutterNorm) * 8); // More blur for slower speeds
+      
+      // Aperture: Affects depth of field
+      const depthOfFieldBlur = (1 - apertureNorm) * 5; // More blur for wider apertures
+      
+      // Apply combined effects
+      imageElement.style.filter = `brightness(${brightnessEffect}) blur(${blurAmount}px)`;
+      
+      // ISO noise effect
+      if (iso > 2) {
+        const noiseOpacity = (iso - 2) * 0.15;
+        overlay.style.backgroundImage = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")';
+        overlay.style.opacity = noiseOpacity;
+      } else {
+        overlay.style.opacity = 0;
+      }
+      
+      // Aperture depth of field effect
+      if (aperture > 2) {
+        // For narrower apertures, create sharpness across the image
+        overlay.style.backdropFilter = 'none';
+        overlay.style.boxShadow = 'none';
+      } else {
+        // For wider apertures, add vignette and blur to simulate shallow depth of field
+        const vignetteAmount = (3 - aperture) * 15;
+        overlay.style.backdropFilter = `blur(${depthOfFieldBlur}px)`;
+        overlay.style.boxShadow = `inset 0 0 ${vignetteAmount}px rgba(0,0,0,0.5)`;
+      }
+    }
+    
+    function updateFeedback(iso, shutter, aperture) {
+      const scenarioType = '{{ example.scenario_type }}';
+      let feedback = '';
+      
+      if (scenarioType === 'night') {
+        // Night photography scenario
+        if (iso >= 4 && shutter <= 2 && aperture <= 2) {
+          feedback = "Great job! High ISO, slow shutter speed, and wide aperture work well for night scenes.";
+        } else if (iso < 3) {
+          feedback = "Try increasing your ISO. In low light conditions, you need higher sensitivity.";
+        } else if (shutter > 3) {
+          feedback = "Try using a slower shutter speed to capture more light in this night scene.";
+        } else if (aperture > 3) {
+          feedback = "A wider aperture (lower f-number) would let in more light for this night scene.";
+        } else {
+          feedback = "You're getting closer! Keep adjusting for the best night photography settings.";
+        }
+      } else if (scenarioType === 'sports') {
+        // Sports/action scenario
+        if (iso >= 3 && shutter >= 4 && aperture <= 3) {
+          feedback = "Perfect! High ISO, fast shutter speed, and wide aperture are ideal for freezing action.";
+        } else if (shutter < 4) {
+          feedback = "Try using a faster shutter speed to freeze the action in sports photography.";
+        } else if (iso < 3) {
+          feedback = "Consider increasing your ISO to maintain exposure with fast shutter speeds.";
+        } else {
+          feedback = "Almost there! Fine-tune your settings for optimal sports photography.";
+        }
+      } else if (scenarioType === 'landscape') {
+        // Landscape scenario
+        if (iso <= 2 && shutter <= 3 && aperture >= 4) {
+          feedback = "Excellent! Low ISO, moderate shutter speed, and narrow aperture create sharp landscape photos.";
+        } else if (iso > 2) {
+          feedback = "Try lowering your ISO. For landscapes in good light, lower ISO values produce cleaner images.";
+        } else if (aperture < 4) {
+          feedback = "A narrower aperture (higher f-number) will give you better depth of field for landscapes.";
+        } else {
+          feedback = "You're on the right track for landscape photography!";
+        }
+      } else if (scenarioType === 'portrait') {
+        // Portrait scenario
+        if (iso <= 2 && shutter >= 3 && aperture <= 2) {
+          feedback = "Perfect! Low ISO, faster shutter speed, and wide aperture create beautiful portraits with background blur.";
+        } else if (aperture > 2) {
+          feedback = "Try using a wider aperture (lower f-number) to create pleasing background blur in portraits.";
+        } else if (iso > 3) {
+          feedback = "Lower ISO values will give you cleaner portraits with less noise.";
+        } else {
+          feedback = "Getting closer to ideal portrait settings!";
+        }
+      } else {
+        feedback = "Experiment with different combinations to see how they affect the image!";
+      }
+      
+      feedbackEl.textContent = feedback;
+    }
+  });
+</script>
+{% endblock %} 

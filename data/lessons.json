@@ -1,22 +1,42 @@
 [
   {
     "title": "ISO",
-    "content": "ISO controls how sensitive your camera is to light.",
-    "image": "/static/images/iso.jpg"
+    "content": "ISO controls how sensitive your camera is to light. Higher ISO values make your camera more sensitive to light, which is useful in low-light conditions. However, higher ISO settings can introduce digital noise into your images. Lower ISO values are used in bright conditions and produce cleaner images with less noise.",
+    "image": "/static/images/iso.jpg",
+    "slider_label": "ISO Setting",
+    "slider_min": "1",
+    "slider_max": "5",
+    "slider_default": "3",
+    "slider_values": ["100", "400", "800", "1600", "3200"]
   },
   {
     "title": "Shutter Speed",
-    "content": "Shutter speed affects motion blur.",
-    "image": "/static/images/shutter.jpg"
+    "content": "Shutter speed determines how long your camera's sensor is exposed to light. Fast shutter speeds (like 1/1000s) freeze motion and are ideal for action photography. Slow shutter speeds (like 1/30s or longer) allow more light in and can create motion blur effects, perfect for capturing movement in scenes like flowing water or light trails.",
+    "image": "/static/images/shutter.jpg",
+    "slider_label": "Shutter Speed",
+    "slider_min": "1",
+    "slider_max": "5",
+    "slider_default": "3",
+    "slider_values": ["1/1000s", "1/250s", "1/60s", "1/15s", "1s"]
   },
   {
     "title": "Aperture",
-    "content": "Aperture affects depth of field.",
-    "image": "/static/images/aperture.jpg"
+    "content": "Aperture controls how much light enters your camera through the lens opening. It's measured in f-stops (like f/2.8 or f/16). A smaller f-number (like f/2.8) means a wider aperture, which lets in more light and creates a shallow depth of field (background blur). A larger f-number (like f/16) means a narrower aperture, which provides greater depth of field, keeping more of the image in focus.",
+    "image": "/static/images/aperture.jpg",
+    "slider_label": "Aperture",
+    "slider_min": "1",
+    "slider_max": "5",
+    "slider_default": "3",
+    "slider_values": ["f/2.8", "f/4", "f/8", "f/11", "f/16"]
   },
   {
     "title": "Recap",
-    "content": "ISO = brightness, Shutter = motion, Aperture = blur.",
-    "image": "/static/images/triangle.jpg"
+    "content": "The Exposure Triangle is formed by ISO, Shutter Speed, and Aperture working together. When you adjust one element, you often need to adjust another to maintain proper exposure. Higher ISO increases brightness but adds noise. Faster shutter speeds reduce motion blur but let in less light. Wider apertures (smaller f-numbers) create shallow depth of field while letting in more light.",
+    "image": "/static/images/triangle.jpg",
+    "slider_label": "Exposure Compensation",
+    "slider_min": "1",
+    "slider_max": "5",
+    "slider_default": "3",
+    "slider_values": ["-2 EV", "-1 EV", "0 EV", "+1 EV", "+2 EV"]
   }
 ]

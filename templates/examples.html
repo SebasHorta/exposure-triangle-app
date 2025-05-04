@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Photography Scenarios{% endblock %}
+
+{% block content %}
+<div class="lesson-container">
+  <div class="examples-header">
+    <h1 class="lesson-title">Photography Scenarios</h1>
+    <div class="examples-description">
+      <p>Apply your knowledge of the exposure triangle in these real-world photography scenarios. 
+        Adjust settings and see how they affect the results in different situations.</p>
+    </div>
+  </div>
+  
+  <div class="examples-grid">
+    {% for example in examples %}
+    <div class="example-card">
+      <div class="example-img-container">
+        <img src="{{ example.image }}" alt="{{ example.title }}">
+      </div>
+      <div class="example-content">
+        <h3>{{ example.title }}</h3>
+        <p>{{ example.intro }}</p>
+        <a href="{{ url_for('examples_route', scenario=example.id) }}" class="example-btn">Try This Scenario</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  
+  <div class="lesson-nav">
+    <a href="{{ url_for('learn', lesson_num=3) }}" class="nav-btn">Back to Lessons</a>
+    <a href="{{ url_for('recap') }}" class="nav-btn next-btn">View Recap</a>
+  </div>
+</div>
+{% endblock %} 

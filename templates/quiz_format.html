@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+
+{% block title %}Quiz Format{% endblock %}
+
+{% block content %}
+<div class="lesson-container">
+  <h1 class="lesson-title">Quiz Format</h1>
+  
+  <div class="status-bar">
+    <div class="status-item complete">
+      <div class="status-number">1</div>
+      <div class="status-label">Guide</div>
+    </div>
+    <div class="status-connector complete"></div>
+    <div class="status-item complete">
+      <div class="status-number">2</div>
+      <div class="status-label">Lessons</div>
+    </div>
+    <div class="status-connector complete"></div>
+    <div class="status-item complete">
+      <div class="status-number">3</div>
+      <div class="status-label">Examples</div>
+    </div>
+    <div class="status-connector complete"></div>
+    <div class="status-item complete">
+      <div class="status-number">4</div>
+      <div class="status-label">Recap</div>
+    </div>
+    <div class="status-connector active"></div>
+    <div class="status-item active">
+      <div class="status-number">5</div>
+      <div class="status-label">Quiz</div>
+    </div>
+  </div>
+  
+  <div class="quiz-format-container">
+    <div class="format-explanation">
+      <p>The quiz will test your understanding of the exposure triangle. There are three types of questions:</p>
+      
+      <div class="question-type">
+        <h3>1. Multiple Choice Questions</h3>
+        <p>Select the best answer from the provided options.</p>
+        <div class="example-scenario">
+          <p><strong>Example:</strong> If shooting in low light, which setting would be most helpful to increase?</p>
+        </div>
+      </div>
+      
+      <div class="question-type">
+        <h3>2. Slider Adjustment Questions</h3>
+        <p>Use sliders to adjust camera settings to achieve a specific photographic goal.</p>
+        <div class="example-scenario">
+          <p><strong>Example:</strong> Adjust the settings to properly expose this nighttime scene.</p>
+        </div>
+      </div>
+      
+      <div class="question-type">
+        <h3>3. Setting Combinations</h3>
+        <p>Select which combination of settings would produce the best result for a given scenario.</p>
+        <div class="example-scenario">
+          <p><strong>Example:</strong> Which settings would work best for this night street scene?</p>
+          <ol class="example-options">
+            <li>ISO 100, 1/1000s, f/16</li>
+            <li>ISO 3200, 1/30s, f/2.8</li>
+            <li>ISO 800, 1/125s, f/5.6</li>
+            <li>ISO 1600, 1/60s, f/4</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    
+    <div class="interactive-example">
+      <h3>Try an Interactive Example (Slider Question)</h3>
+      <div class="interactive-quiz-demo">
+        <div class="quiz-question">
+          <p>Adjust the sliders to properly expose a night street scene.</p>
+          
+          <div class="slider-quiz-controls">
+            <div class="slider-container quiz-slider-container">
+              <label for="demo-iso-slider">ISO: <span id="demo-iso-value">400</span></label>
+              <input type="range" id="demo-iso-slider" class="interactive-slider" min="1" max="5" value="3">
+              <div class="slider-values">
+                <span>100</span>
+                <span>200</span>
+                <span>400</span>
+                <span>800</span>
+                <span>1600</span>
+              </div>
+            </div>
+            
+            <div class="slider-container quiz-slider-container">
+              <label for="demo-shutter-slider">Shutter Speed: <span id="demo-shutter-value">1/125s</span></label>
+              <input type="range" id="demo-shutter-slider" class="interactive-slider" min="1" max="5" value="3">
+              <div class="slider-values">
+                <span>1s</span>
+                <span>1/30s</span>
+                <span>1/125s</span>
+                <span>1/500s</span>
+                <span>1/2000s</span>
+              </div>
+            </div>
+            
+            <div class="slider-container quiz-slider-container">
+              <label for="demo-aperture-slider">Aperture: <span id="demo-aperture-value">f/8</span></label>
+              <input type="range" id="demo-aperture-slider" class="interactive-slider" min="1" max="5" value="3">
+              <div class="slider-values">
+                <span>f/2.8</span>
+                <span>f/4</span>
+                <span>f/8</span>
+                <span>f/11</span>
+                <span>f/16</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="interactive-image" id="quiz-demo-image">
+          <img src="{{ url_for('static', filename='images/night_scene.jpg') }}" alt="Quiz Example" class="quiz-demo-img">
+          <div class="interactive-overlay" id="demo-overlay"></div>
+        </div>
+        
+        <div id="demo-feedback" class="quiz-feedback hidden">
+          <p class="feedback-text"></p>
+        </div>
+        
+        <button id="check-answer" class="quiz-btn">Check Settings</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="lesson-nav quiz-nav">
+    <a href="{{ url_for('recap') }}" class="nav-btn">Back to Recap</a>
+    <a href="{{ url_for('quiz_route', question_num=1) }}" class="nav-btn test-btn">Start Quiz!</a>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Demo sliders functionality
+    const isoSlider = document.getElementById('demo-iso-slider');
+    const shutterSlider = document.getElementById('demo-shutter-slider');
+    const apertureSlider = document.getElementById('demo-aperture-slider');
+    const isoValue = document.getElementById('demo-iso-value');
+    const shutterValue = document.getElementById('demo-shutter-value');
+    const apertureValue = document.getElementById('demo-aperture-value');
+    const quizImage = document.getElementById('quiz-demo-image');
+    const imgElement = quizImage.querySelector('img');
+    const overlay = document.getElementById('demo-overlay');
+    const checkButton = document.getElementById('check-answer');
+    const feedbackEl = document.getElementById('demo-feedback');
+    const feedbackText = feedbackEl.querySelector('.feedback-text');
+    
+    // ISO slider values
+    const isoValues = ['100', '200', '400', '800', '1600'];
+    isoSlider.addEventListener('input', function() {
+      const value = parseInt(this.value);
+      isoValue.textContent = isoValues[value-1];
+      updateHighlight(isoSlider, value);
+      updateEffects();
+    });
+    
+    // Shutter slider values
+    const shutterValues = ['1s', '1/30s', '1/125s', '1/500s', '1/2000s'];
+    shutterSlider.addEventListener('input', function() {
+      const value = parseInt(this.value);
+      shutterValue.textContent = shutterValues[value-1];
+      updateHighlight(shutterSlider, value);
+      updateEffects();
+    });
+    
+    // Aperture slider values
+    const apertureValues = ['f/2.8', 'f/4', 'f/8', 'f/11', 'f/16'];
+    apertureSlider.addEventListener('input', function() {
+      const value = parseInt(this.value);
+      apertureValue.textContent = apertureValues[value-1];
+      updateHighlight(apertureSlider, value);
+      updateEffects();
+    });
+    
+    function updateHighlight(slider, value) {
+      // Find the slider container
+      const container = slider.closest('.slider-container');
+      const valueSpans = container.querySelectorAll('.slider-values span');
+      
+      valueSpans.forEach((span, i) => {
+        if (i + 1 === value) {
+          span.classList.add('active-value');
+        } else {
+          span.classList.remove('active-value');
+        }
+      });
+    }
+    
+    function updateEffects() {
+      // Get current values
+      const isoVal = parseInt(isoSlider.value);
+      const shutterVal = parseInt(shutterSlider.value);
+      const apertureVal = parseInt(apertureSlider.value);
+      
+      // Calculate light input
+      // For night scene, want: High ISO, Slow shutter, Wide aperture
+      const isoFactor = (isoVal - 1) / 4; // 0-1
+      const shutterFactor = 1 - ((shutterVal - 1) / 4); // 1-0
+      const apertureFactor = 1 - ((apertureVal - 1) / 4); // 1-0
+      
+      // Apply ISO effect (noise and brightness)
+      let noiseAmount = isoFactor * 0.5;
+      let brightnessAmount = 1 + (isoFactor * 0.5);
+      
+      // Apply combined effects to image
+      imgElement.style.filter = `brightness(${brightnessAmount})`;
+      
+      // Apply motion blur for shutter speed
+      if (shutterVal < 3) {
+        imgElement.style.filter += ` blur(${(3 - shutterVal) * 1.5}px)`;
+      }
+      
+      // Apply noise overlay for high ISO
+      if (isoVal > 3) {
+        overlay.style.backgroundImage = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")';
+        overlay.style.opacity = noiseAmount;
+      } else {
+        overlay.style.opacity = 0;
+      }
+      
+      // Apply depth of field effect for aperture
+      if (apertureVal < 3) {
+        overlay.style.boxShadow = `inset 0 0 ${15 - (apertureVal * 5)}px rgba(0,0,0,0.5)`;
+      } else {
+        overlay.style.boxShadow = 'none';
+      }
+      
+      // Hide feedback when settings change
+      feedbackEl.classList.add('hidden');
+    }
+    
+    checkButton.addEventListener('click', function() {
+      // Get current values
+      const isoVal = parseInt(isoSlider.value);
+      const shutterVal = parseInt(shutterSlider.value);
+      const apertureVal = parseInt(apertureSlider.value);
+      
+      // For night scene, correct settings are:
+      // High ISO (4-5), Slow shutter (1-2), Wide aperture (1-2)
+      const isoCorrect = isoVal >= 4;
+      const shutterCorrect = shutterVal <= 2;
+      const apertureCorrect = apertureVal <= 2;
+      
+      const correctCount = (isoCorrect ? 1 : 0) + (shutterCorrect ? 1 : 0) + (apertureCorrect ? 1 : 0);
+      
+      feedbackEl.classList.remove('hidden');
+      
+      if (correctCount === 3) {
+        feedbackText.textContent = "Perfect! High ISO, slow shutter speed, and wide aperture are ideal for night photography.";
+        feedbackEl.className = "quiz-feedback correct";
+      } else if (correctCount === 2) {
+        let wrongSetting = "";
+        if (!isoCorrect) wrongSetting = "higher ISO";
+        if (!shutterCorrect) wrongSetting = "slower shutter speed";
+        if (!apertureCorrect) wrongSetting = "wider aperture (lower f-number)";
+        
+        feedbackText.textContent = `Close! But for night photography, you'd want to use ${wrongSetting}.`;
+        feedbackEl.className = "quiz-feedback partial";
+      } else if (correctCount === 1) {
+        feedbackText.textContent = "You got one setting right, but night photography typically requires high ISO, slow shutter speed, and wide aperture.";
+        feedbackEl.className = "quiz-feedback incorrect";
+      } else {
+        feedbackText.textContent = "For night photography, you need more light: try using higher ISO, slower shutter speed, and wider aperture.";
+        feedbackEl.className = "quiz-feedback incorrect";
+      }
+    });
+    
+    // Initialize highlights and effects
+    updateHighlight(isoSlider, 3);
+    updateHighlight(shutterSlider, 3);
+    updateHighlight(apertureSlider, 3);
+    updateEffects();
+  });
+</script>
+{% endblock %} 

@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}Guide to the Exposure Triangle{% endblock %}
+
+{% block content %}
+<div class="lesson-container">
+  <h1 class="lesson-title">The Exposure Triangle Guide</h1>
+  
+  <div class="status-bar">
+    <div class="status-item active">
+      <div class="status-number">1</div>
+      <div class="status-label">Guide</div>
+    </div>
+    <div class="status-connector"></div>
+    <div class="status-item">
+      <div class="status-number">2</div>
+      <div class="status-label">Lessons</div>
+    </div>
+    <div class="status-connector"></div>
+    <div class="status-item">
+      <div class="status-number">3</div>
+      <div class="status-label">Examples</div>
+    </div>
+    <div class="status-connector"></div>
+    <div class="status-item">
+      <div class="status-number">4</div>
+      <div class="status-label">Recap</div>
+    </div>
+    <div class="status-connector"></div>
+    <div class="status-item">
+      <div class="status-number">5</div>
+      <div class="status-label">Quiz</div>
+    </div>
+  </div>
+  
+  <div class="guide-intro">
+    <div class="guide-intro-content">
+      <p>Welcome to the Exposure Triangle App! This interactive guide will help you understand the three fundamental elements of photography exposure:</p>
+      
+      <div class="triangle-overview">
+        <div class="triangle-element">
+          <h2>ISO</h2>
+          <p>Controls your camera's sensitivity to light</p>
+        </div>
+        
+        <div class="triangle-element">
+          <h2>Shutter Speed</h2>
+          <p>Controls how long light enters your camera</p>
+        </div>
+        
+        <div class="triangle-element">
+          <h2>Aperture</h2>
+          <p>Controls how much light enters your camera</p>
+        </div>
+      </div>
+      
+      <p class="guide-description">These three elements work together to create a properly exposed photograph. Changing one element often requires adjusting one or both of the others to maintain proper exposure.</p>
+    </div>
+    
+    <div class="triangle-graphic">
+      <img src="{{ url_for('static', filename='images/triangle.jpg') }}" alt="Exposure Triangle" class="guide-triangle-img">
+    </div>
+  </div>
+  
+  <div class="guide-learning-path">
+    <h2>Your Learning Journey</h2>
+    
+    <div class="learning-path-steps">
+      <div class="path-step">
+        <div class="step-number">1</div>
+        <div class="step-content">
+          <h3>Learn the Basics</h3>
+          <p>Explore each element of the exposure triangle individually through interactive lessons.</p>
+        </div>
+      </div>
+      
+      <div class="path-step">
+        <div class="step-number">2</div>
+        <div class="step-content">
+          <h3>Try Real Examples</h3>
+          <p>Apply your knowledge to real-world photography scenarios with our interactive examples.</p>
+        </div>
+      </div>
+      
+      <div class="path-step">
+        <div class="step-number">3</div>
+        <div class="step-content">
+          <h3>Test Your Knowledge</h3>
+          <p>Take a quiz to see how well you understand the exposure triangle concepts.</p>
+        </div>
+      </div>
+      
+      <div class="path-step">
+        <div class="step-number">4</div>
+        <div class="step-content">
+          <h3>Review and Improve</h3>
+          <p>Get personalized feedback on areas where you can deepen your understanding.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="guide-features">
+    <h2>Interactive Features</h2>
+    
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Interactive Sliders</h3>
+        <p>Adjust settings and see real-time changes to understand their effects on your photos.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">📷</div>
+        <h3>Visual Examples</h3>
+        <p>See how different settings affect real photography scenarios with visual simulations.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">💡</div>
+        <h3>Instant Feedback</h3>
+        <p>Get immediate guidance on your setting choices to help reinforce concepts.</p>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Progress Tracking</h3>
+        <p>Monitor your learning journey with quizzes that identify areas for improvement.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="guide-cta">
+    <h2>Ready to Begin?</h2>
+    <p>Start your learning journey by exploring each element of the exposure triangle:</p>
+    
+    <div class="guide-buttons">
+      <a href="{{ url_for('learn', lesson_num=1) }}" class="guide-btn primary-btn">Start Learning</a>
+      <a href="{{ url_for('examples_route') }}" class="guide-btn secondary-btn">Jump to Examples</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth scrolling for navigation
+    const guideButtons = document.querySelectorAll('.guide-btn');
+    
+    guideButtons.forEach(button => {
+      button.addEventListener('mouseover', function() {
+        this.classList.add('hover');
+      });
+      
+      button.addEventListener('mouseout', function() {
+        this.classList.remove('hover');
+      });
+    });
+    
+    // Add hover effects to feature cards
+    const featureCards = document.querySelectorAll('.feature-card');
+    
+    featureCards.forEach(card => {
+      card.addEventListener('mouseover', function() {
+        this.classList.add('hover');
+      });
+      
+      card.addEventListener('mouseout', function() {
+        this.classList.remove('hover');
+      });
+    });
+  });
+</script>
+{% endblock %} 

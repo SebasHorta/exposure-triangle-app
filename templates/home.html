@@ -16,12 +16,13 @@
     </h1>
 
     <p class="hero-text">
-      Text introducing the concept of mastering the exposure triangle and why it’s useful etc. etc.
+      Learn how to balance ISO, shutter speed, and aperture to take perfect photos in any situation. 
+      This interactive guide will help you understand photography's most fundamental concept.
     </p>
 
     <div class="hero-buttons">
-      <a href="{{ url_for('learn', lesson_num=1) }}" class="btn">Start Now</a>
-      <a href="{{ url_for('quiz_route', question_num=1) }}" class="btn">Test Yourself</a>
+      <a href="{{ url_for('guide') }}" class="btn">Start Learning</a>
+      <a href="{{ url_for('quiz_format') }}" class="btn">Test Your Skills</a>
     </div>
   </div>
 {% endblock %}

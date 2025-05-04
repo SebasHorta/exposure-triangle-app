@@ -6,15 +6,48 @@
 {% block title %}{{ lesson.title }}{% endblock %}
 
 {% block content %}
-<!-- Lesson Content -->
-<div class="my-5">
-  <div class="card p-4 shadow-lg">
-    <h2 class="fw-bold mb-3">{{ lesson.title }}</h2>
-    <p class="lead">{{ lesson.content }}</p>
-    <img src="{{ lesson.image }}" alt="{{ lesson.title }}" class="img-fluid mb-4 rounded">
-    <div class="text-end">
-      <a href="{{ url_for('learn', lesson_num=lesson_num + 1) }}" class="btn btn-primary">Next</a>
+<div class="lesson-container">
+  <h1 class="lesson-title">{{ lesson.title }}</h1>
+  
+  <div class="lesson-content">
+    <div class="lesson-explanation">
+      <p>{{ lesson.content }}</p>
     </div>
+    
+    <div class="lesson-interactive">
+      <div class="interactive-image" id="lesson-image">
+        <img src="{{ lesson.image }}" alt="{{ lesson.title }}" class="lesson-img">
+      </div>
+      
+      <div class="interactive-controls">
+        <div class="slider-container">
+          <label for="lesson-slider">{{ lesson.slider_label|default('Adjust setting') }}</label>
+          <input type="range" id="lesson-slider" class="interactive-slider" 
+                 min="{{ lesson.slider_min|default('1') }}" 
+                 max="{{ lesson.slider_max|default('5') }}" 
+                 value="{{ lesson.slider_default|default('3') }}" step="1">
+          <div class="slider-values">
+            {% for value in lesson.slider_values|default(['Low', 'Medium', 'High']) %}
+              <span>{{ value }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="lesson-nav">
+    {% if lesson_num > 1 %}
+      <a href="{{ url_for('learn', lesson_num=lesson_num - 1) }}" class="nav-btn">Previous</a>
+    {% endif %}
+    
+    <a href="{{ url_for('quiz_route', question_num=1) }}" class="nav-btn test-btn">Test Yourself</a>
+    
+    {% if lesson_num < total_lessons %}
+      <a href="{{ url_for('learn', lesson_num=lesson_num + 1) }}" class="nav-btn next-btn">Next</a>
+    {% else %}
+      <a href="{{ url_for('quiz_route', question_num=1) }}" class="nav-btn next-btn">Next</a>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

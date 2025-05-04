@@ -6,31 +6,243 @@
 {% block title %}Quiz Question {{ question_num }}{% endblock %}
 
 {% block content %}
-<!-- Quiz Content -->
-<div class="my-5">
-  <div class="card p-4 shadow-lg">
-    <!-- Quiz progress -->
-    <div class="progress mb-3" style="height: 5px;">
-      <div class="progress-bar" role="progressbar" style="width: {{ (question_num / 3) * 100 }}%;" 
-           aria-valuenow="{{ question_num }}" aria-valuemin="0" aria-valuemax="3"></div>
+<div class="lesson-container">
+  <h1 class="lesson-title">Question {{ question_num }} {% if question.type == 'slider' %}(Slider){% else %}(MC){% endif %}</h1>
+  
+  <div class="status-bar">
+    <div class="status-item complete">
+      <div class="status-number">1</div>
+      <div class="status-label">Guide</div>
     </div>
-    <p class="text-muted mb-3">Question {{ question_num }} of 3</p>
-    
-    <h2 class="fw-bold mb-3">{{ question.prompt }}</h2>
-
-    <form method="POST" class="quiz-form">
-      <div class="mb-3">
-        {% for option in question.options %}
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="answer" id="option{{ loop.index }}" value="{{ option }}" required>
-            <label class="form-check-label" for="option{{ loop.index }}">
-              {{ option }}
-            </label>
+    <div class="status-connector complete"></div>
+    <div class="status-item complete">
+      <div class="status-number">2</div>
+      <div class="status-label">Lessons</div>
+    </div>
+    <div class="status-connector complete"></div>
+    <div class="status-item complete">
+      <div class="status-number">3</div>
+      <div class="status-label">Examples</div>
+    </div>
+    <div class="status-connector complete"></div>
+    <div class="status-item complete">
+      <div class="status-number">4</div>
+      <div class="status-label">Recap</div>
+    </div>
+    <div class="status-connector active"></div>
+    <div class="status-item active">
+      <div class="status-number">5</div>
+      <div class="status-label">Quiz</div>
+    </div>
+  </div>
+  
+  <div class="quiz-progress-text">
+    Question {{ progress.current }} of {{ progress.total }}
+  </div>
+  
+  <div class="progress-bar-container">
+    <div class="progress-bar" style="width: {{ (progress.current / progress.total) * 100 }}%;"></div>
+  </div>
+  
+  <div class="quiz-container">
+    <div class="quiz-question-container">
+      <div class="question-text">{{ question.question }}</div>
+      
+      <form method="POST" class="quiz-form" id="quizForm">
+        {% if question.type == 'slider' %}
+          <div class="slider-quiz-controls">
+            {% for slider in question.sliders %}
+              <div class="slider-container quiz-slider-container">
+                <label for="{{ slider.id }}">{{ slider.label }}: <span id="{{ slider.id }}-value">{{ slider.default_display_value }}</span></label>
+                <input type="range" id="{{ slider.id }}" name="{{ slider.id }}" class="interactive-slider" 
+                       min="1" max="{{ slider.steps }}" value="{{ slider.default_value }}" 
+                       data-values="{{ slider.values|tojson }}">
+                <div class="slider-values">
+                  {% for value in slider.values %}
+                    <span>{{ value }}</span>
+                  {% endfor %}
+                </div>
+                <input type="hidden" id="{{ slider.id }}_hidden" name="{{ slider.id }}_answer" value="{{ slider.default_display_value }}">
+              </div>
+            {% endfor %}
           </div>
-        {% endfor %}
-      </div>
-      <button type="submit" class="btn btn-primary">Next Question</button>
-    </form>
+        {% else %}
+          <div class="quiz-options">
+            {% for option in question.options %}
+              <div class="quiz-option">
+                <input type="radio" id="option{{ loop.index }}" name="answer" value="{{ option }}">
+                <label for="option{{ loop.index }}">{{ option }}</label>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+        
+        <div class="quiz-action">
+          <button type="submit" class="quiz-btn">Submit Answer</button>
+        </div>
+      </form>
+    </div>
+    
+    <div class="interactive-image" id="quiz-image">
+      <img src="{{ url_for('static', filename='images/' ~ question.image|default('triangle.jpg')) }}" alt="Quiz Question" class="quiz-img">
+      {% if question.type == 'slider' %}
+        <div class="interactive-overlay" id="quiz-overlay"></div>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="quiz-nav">
+    <div class="progress-indicator">
+      Progress: {{ progress.current }}/{{ progress.total }}
+    </div>
+    <button type="submit" form="quizForm" class="nav-btn next-btn">Next</button>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const quizForm = document.querySelector('.quiz-form');
+    const submitButton = document.querySelector('.quiz-btn');
+    const navNextButton = document.querySelector('.next-btn');
+    const quizImage = document.getElementById('quiz-image');
+    const quizImgElement = quizImage.querySelector('img');
+    const quizOverlay = document.getElementById('quiz-overlay');
+    
+    // Disable both buttons initially
+    submitButton.disabled = true;
+    navNextButton.style.opacity = '0.5';
+    navNextButton.style.pointerEvents = 'none';
+    
+    // For multiple choice questions
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    if (radioButtons.length > 0) {
+      radioButtons.forEach(button => {
+        button.addEventListener('change', function() {
+          submitButton.disabled = false;
+          navNextButton.style.opacity = '1';
+          navNextButton.style.pointerEvents = 'auto';
+        });
+      });
+    }
+    
+    // For slider type questions
+    const sliders = document.querySelectorAll('.interactive-slider');
+    if (sliders.length > 0) {
+      // Enable buttons immediately for slider questions
+      submitButton.disabled = false;
+      navNextButton.style.opacity = '1';
+      navNextButton.style.pointerEvents = 'auto';
+      
+      // Add functionality to update the display values and hidden fields
+      sliders.forEach(slider => {
+        const valueDisplay = document.getElementById(`${slider.id}-value`);
+        const hiddenInput = document.getElementById(`${slider.id}_hidden`);
+        const valuesData = JSON.parse(slider.dataset.values);
+        
+        // Initialize active value highlight
+        updateHighlight(slider, parseInt(slider.value));
+        
+        slider.addEventListener('input', function() {
+          const value = parseInt(this.value);
+          const displayValue = valuesData[value - 1];
+          
+          // Update the display value
+          valueDisplay.textContent = displayValue;
+          
+          // Update the hidden input
+          hiddenInput.value = displayValue;
+          
+          // Update the highlight
+          updateHighlight(slider, value);
+          
+          // Update visual effects
+          updateQuizEffects();
+        });
+      });
+      
+      // Initialize quiz effects
+      updateQuizEffects();
+    }
+    
+    function updateHighlight(slider, value) {
+      // Find the slider container
+      const container = slider.closest('.slider-container');
+      const valueSpans = container.querySelectorAll('.slider-values span');
+      
+      valueSpans.forEach((span, i) => {
+        if (i + 1 === value) {
+          span.classList.add('active-value');
+        } else {
+          span.classList.remove('active-value');
+        }
+      });
+    }
+    
+    function updateQuizEffects() {
+      if (!quizOverlay) return;
+      
+      // Get all sliders
+      const isoSlider = document.getElementById('iso-slider');
+      const shutterSlider = document.getElementById('shutter-slider');
+      const apertureSlider = document.getElementById('aperture-slider');
+      
+      // Calculate and apply effects based on available sliders
+      let filters = [];
+      
+      if (isoSlider) {
+        const isoVal = parseInt(isoSlider.value);
+        const isoFactor = (isoVal - 1) / 4; // 0-1
+        const brightness = 1 + (isoFactor * 0.5);
+        filters.push(`brightness(${brightness})`);
+        
+        // Add noise for high ISO
+        if (isoVal > 3) {
+          const noiseAmount = isoFactor * 0.5;
+          quizOverlay.style.backgroundImage = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")';
+          quizOverlay.style.opacity = noiseAmount;
+        } else {
+          quizOverlay.style.opacity = '0';
+        }
+      }
+      
+      if (shutterSlider) {
+        const shutterVal = parseInt(shutterSlider.value);
+        const shutterFactor = 1 - ((shutterVal - 1) / 4); // 1-0
+        
+        // Apply motion blur for slower shutter speeds
+        if (shutterVal < 3) {
+          const motionBlur = shutterFactor * 5;
+          filters.push(`blur(${motionBlur}px)`);
+        }
+      }
+      
+      if (apertureSlider) {
+        const apertureVal = parseInt(apertureSlider.value);
+        const apertureFactor = 1 - ((apertureVal - 1) / 4); // 1-0
+        
+        // Apply depth of field effect
+        if (apertureVal < 3) {
+          quizOverlay.style.boxShadow = `inset 0 0 ${15 - (apertureVal * 5)}px rgba(0,0,0,0.5)`;
+        } else {
+          quizOverlay.style.boxShadow = 'none';
+        }
+      }
+      
+      // Apply all filters
+      if (filters.length > 0) {
+        quizImgElement.style.filter = filters.join(' ');
+      } else {
+        quizImgElement.style.filter = 'none';
+      }
+    }
+    
+    // Make the nav next button submit the form
+    navNextButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      quizForm.submit();
+    });
+  });
+</script>
 {% endblock %}

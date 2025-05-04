@@ -3,39 +3,116 @@
 
 {% extends 'base.html' %}
 
-{% block title %}Quiz Result{% endblock %}
+{% block title %}Quiz Results{% endblock %}
 
 {% block content %}
-<!-- Result Content -->
-<div class="text-center my-5">
-  <div class="card p-4 shadow-lg">
-    <h2 class="fw-bold mb-3">Quiz Complete!</h2>
-    
-    <div class="mb-4">
-      <p class="lead">Your Score: <strong>{{ score }}</strong> / {{ total }}</p>
-      
+<div class="lesson-container">
+  <h1 class="lesson-title">Your Quiz Results</h1>
+  
+  <div class="result-summary">
+    <div class="result-score">{{ score }} / {{ total }}</div>
+    <div class="result-message">
       {% if score == total %}
-        <div class="alert alert-success">
-          <h4>Perfect Score! 🎉</h4>
-          <p>Great job! You've mastered the exposure triangle concepts!</p>
-        </div>
-      {% elif score >= total//2 %}
-        <div class="alert alert-info">
-          <h4>Good Job! 👍</h4>
-          <p>You're on your way to understanding the exposure triangle!</p>
-        </div>
+        Excellent! You've mastered the exposure triangle concepts!
+      {% elif score >= total * 0.75 %}
+        Great job! You have a strong understanding of the exposure triangle.
+      {% elif score >= total * 0.5 %}
+        Good effort! You're grasping many of the key concepts.
       {% else %}
-        <div class="alert alert-warning">
-          <h4>Keep Learning! 📚</h4>
-          <p>Review the lessons again to strengthen your understanding.</p>
-        </div>
+        You're making progress! With more practice, you'll get there.
       {% endif %}
     </div>
+  </div>
+  
+  <div class="improvement-areas">
+    <h2>Areas for Improvement</h2>
     
-    <div class="d-grid gap-2 col-md-6 mx-auto">
-      <a href="{{ url_for('learn', lesson_num=1) }}" class="btn btn-outline-primary">Review Lessons</a>
-      <a href="{{ url_for('home') }}" class="btn btn-primary">Return Home</a>
+    <div class="improvement-grid">
+      <div class="improvement-card {% if improvement_areas.iso %}needs-improvement{% else %}good{% endif %}">
+        <h3>
+          <span class="improvement-card-icon">
+            {% if improvement_areas.iso %}❌{% else %}✓{% endif %}
+          </span>
+          ISO Understanding
+        </h3>
+        <p>
+          {% if improvement_areas.iso %}
+            You might need to review how ISO affects exposure and image quality.
+          {% else %}
+            You have a good understanding of ISO settings!
+          {% endif %}
+        </p>
+      </div>
+      
+      <div class="improvement-card {% if improvement_areas.shutter %}needs-improvement{% else %}good{% endif %}">
+        <h3>
+          <span class="improvement-card-icon">
+            {% if improvement_areas.shutter %}❌{% else %}✓{% endif %}
+          </span>
+          Shutter Speed Concepts
+        </h3>
+        <p>
+          {% if improvement_areas.shutter %}
+            Review how shutter speed impacts motion and exposure in your images.
+          {% else %}
+            You understand shutter speed concepts well!
+          {% endif %}
+        </p>
+      </div>
+      
+      <div class="improvement-card {% if improvement_areas.aperture %}needs-improvement{% else %}good{% endif %}">
+        <h3>
+          <span class="improvement-card-icon">
+            {% if improvement_areas.aperture %}❌{% else %}✓{% endif %}
+          </span>
+          Aperture Knowledge
+        </h3>
+        <p>
+          {% if improvement_areas.aperture %}
+            Focus on understanding how aperture affects depth of field and light.
+          {% else %}
+            You have a solid grasp of aperture settings!
+          {% endif %}
+        </p>
+      </div>
     </div>
+    
+    <div class="review-btn-container">
+      {% if improvement_areas.iso %}
+        <a href="{{ url_for('learn', lesson_num=1) }}" class="review-btn">Review ISO</a>
+      {% elif improvement_areas.shutter %}
+        <a href="{{ url_for('learn', lesson_num=2) }}" class="review-btn">Review Shutter Speed</a>
+      {% elif improvement_areas.aperture %}
+        <a href="{{ url_for('learn', lesson_num=3) }}" class="review-btn">Review Aperture</a>
+      {% else %}
+        <a href="{{ url_for('recap') }}" class="review-btn">View Recap</a>
+      {% endif %}
+    </div>
+  </div>
+  
+  {% if incorrect_questions %}
+  <div class="incorrect-questions">
+    <h2>Review Your Answers</h2>
+    
+    {% for question in incorrect_questions %}
+    <div class="question-review">
+      <div class="question-number">Question {{ question.number }}</div>
+      <div class="question-text">{{ question.question }}</div>
+      <div class="user-answer">Your answer: {{ question.user_answer }}</div>
+      <div class="correct-answer">Correct answer: {{ question.correct_answer }}</div>
+      {% if question.explanation %}
+      <div class="answer-explanation">
+        <strong>Explanation:</strong> {{ question.explanation }}
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  
+  <div class="lesson-nav">
+    <a href="{{ url_for('quiz_format') }}" class="nav-btn">Retake Quiz</a>
+    <a href="{{ url_for('recap') }}" class="nav-btn next-btn">View Recap</a>
   </div>
 </div>
 {% endblock %}
