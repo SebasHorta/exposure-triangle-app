@@ -1,52 +1,38 @@
 [
   {
-    "question": "Which setting primarily controls motion blur in your photographs?",
-    "options": ["ISO", "Aperture", "Shutter Speed", "White Balance"],
-    "correct": "Shutter Speed",
-    "explanation": "Shutter speed controls how long the camera's sensor is exposed to light. Faster shutter speeds (like 1/1000s) freeze motion, while slower speeds (like 1/30s) allow motion blur to occur.",
-    "image": "shutter.jpg"
-  },
-  {
-    "question": "In low light conditions, which setting would you most likely increase to maintain proper exposure?",
-    "options": ["ISO", "Aperture value (f-number)", "Shutter Speed", "Flash Power"],
-    "correct": "ISO",
-    "explanation": "ISO controls your camera's sensitivity to light. In low light, increasing ISO (e.g., from 100 to 1600) makes the sensor more sensitive to the available light, allowing for proper exposure.",
-    "image": "iso.jpg"
-  },
-  {
     "question": "Which setting gives you a shallow depth of field (blurred background)?",
     "options": ["High ISO", "Wide aperture (low f-number)", "Fast shutter speed", "Narrow aperture (high f-number)"],
     "correct": "Wide aperture (low f-number)",
     "explanation": "A wide aperture (low f-number like f/1.8 or f/2.8) creates a shallow depth of field, keeping your subject in focus while blurring the background.",
-    "image": "aperture.jpg"
+    "image": "https://via.placeholder.com/600x400?text=Blurred+Background+Image"
   },
   {
     "question": "If you want to photograph a waterfall with silky, smooth water, which shutter speed would be most appropriate?",
     "options": ["1/1000s", "1/250s", "1/30s", "1s"],
     "correct": "1s",
     "explanation": "Longer shutter speeds (like 1 second) allow moving water to blur into a smooth, silky appearance. This technique requires a tripod to prevent camera shake.",
-    "image": "shutter.jpg"
+    "image": "https://via.placeholder.com/600x400?text=Waterfall+Image"
   },
   {
     "question": "When shooting sports or fast action, which setting is most critical to adjust?",
     "options": ["ISO", "Aperture", "Shutter Speed", "White Balance"],
     "correct": "Shutter Speed",
     "explanation": "Fast shutter speeds (1/500s or faster) are essential for freezing action in sports photography. This prevents motion blur and keeps fast-moving subjects sharp.",
-    "image": "shutter.jpg"
+    "image": "https://via.placeholder.com/600x400?text=Sports+Image"
   },
   {
     "question": "What is a potential drawback of using a very high ISO setting?",
     "options": ["Overexposure", "Digital noise", "Too much depth of field", "Motion blur"],
     "correct": "Digital noise",
     "explanation": "Higher ISO settings (like 1600, 3200, or above) make your image more susceptible to digital noise, which appears as grain or speckles that reduce image quality.",
-    "image": "iso.jpg"
+    "image": "https://via.placeholder.com/600x400?text=Bright+ISO+Image"
   },
   {
     "question": "For a landscape photo where you want everything in focus from foreground to background, which aperture setting would be best?",
     "options": ["f/2.8", "f/4", "f/8", "f/16"],
     "correct": "f/16",
     "explanation": "Narrower apertures (higher f-numbers like f/11 or f/16) create a deeper depth of field, keeping more of the scene in focus—ideal for landscape photography.",
-    "image": "aperture.jpg"
+    "image": "https://via.placeholder.com/600x400?text=Landscape+Image"
   },
   {
     "question": "For a portrait where you want to separate the subject from the background, which combination would work best?",
@@ -58,7 +44,31 @@
     ],
     "correct": "ISO 400, f/2.8, 1/250s",
     "explanation": "For portraits with background separation, use a wide aperture (low f-number like f/2.8) to create shallow depth of field. The moderate ISO and fast enough shutter speed ensure a well-exposed, sharp subject.",
-    "image": "triangle.jpg"
+    "image": "https://via.placeholder.com/600x400?text=Subject+Background+Image"
+  },
+  {
+    "type": "slider",
+    "question": "Adjust the sliders to properly expose this night scene.",
+    "image": "https://via.placeholder.com/600x400?text=Night+Quiz",
+    "sliders": [
+      {"id": "iso-slider", "label": "ISO", "steps": 5, "default_value": 3, "default_display_value": "400", "values": ["100", "200", "400", "800", "1600"]},
+      {"id": "shutter-slider", "label": "Shutter Speed", "steps": 5, "default_value": 3, "default_display_value": "1/125s", "values": ["1s", "1/30s", "1/125s", "1/500s", "1/2000s"]},
+      {"id": "aperture-slider", "label": "Aperture", "steps": 5, "default_value": 3, "default_display_value": "f/8", "values": ["f/2.8", "f/4", "f/8", "f/11", "f/16"]}
+    ],
+    "correct": "800|1/30s|f/2.8",
+    "explanation": "For night scenes, a higher ISO, slower shutter speed, and wider aperture let in enough light to expose the image without excessive blur or noise."
+  },
+  {
+    "type": "slider",
+    "question": "Adjust the sliders to capture fast action in sports photography.",
+    "image": "https://via.placeholder.com/600x400?text=Sports+Quiz",
+    "sliders": [
+      {"id": "iso-slider", "label": "ISO", "steps": 5, "default_value": 3, "default_display_value": "400", "values": ["100", "400", "800", "1600", "3200"]},
+      {"id": "shutter-slider", "label": "Shutter Speed", "steps": 5, "default_value": 3, "default_display_value": "1/500s", "values": ["1/2000s", "1/1000s", "1/500s", "1/250s", "1/125s"]},
+      {"id": "aperture-slider", "label": "Aperture", "steps": 5, "default_value": 3, "default_display_value": "f/4", "values": ["f/2.8", "f/4", "f/5.6", "f/8", "f/11"]}
+    ],
+    "correct": "400|1/2000s|f/2.8",
+    "explanation": "For sports action, a fast shutter speed, moderate ISO, and moderately wide aperture freeze motion while maintaining exposure."
   }
 ]
   

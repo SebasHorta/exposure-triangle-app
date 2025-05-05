@@ -69,10 +69,18 @@
     </div>
   </div>
   
+  <button id="reveal-settings-btn" class="nav-btn" style="margin-top:1rem;">Reveal Settings</button>
+  <div id="settings-answer" class="feedback-box" style="display:none; margin-top:1rem;">
+    <h3>Possible Settings:</h3>
+    <p>ISO: {{ example.iso_values[example.answer_iso_index - 1] }}</p>
+    <p>Shutter Speed: {{ example.shutter_values[example.answer_shutter_index - 1] }}</p>
+    <p>Aperture: {{ example.aperture_values[example.answer_aperture_index - 1] }}</p>
+  </div>
+  
   <div class="lesson-nav">
     <a href="{{ url_for('learn', lesson_num=3) }}" class="nav-btn">Back to Lessons</a>
     <a href="{{ url_for('quiz_format') }}" class="nav-btn test-btn">Test Yourself</a>
-    <a href="{{ url_for('recap') }}" class="nav-btn next-btn">View Recap</a>
+    <a href="{{ url_for('learn', lesson_num=4) }}" class="nav-btn next-btn">View Recap</a>
   </div>
 </div>
 {% endblock %}
@@ -239,6 +247,17 @@
       }
       
       feedbackEl.textContent = feedback;
+    }
+    
+    // Reveal settings answer on button click
+    const revealBtn = document.getElementById('reveal-settings-btn');
+    const answerDiv = document.getElementById('settings-answer');
+    if (revealBtn && answerDiv) {
+      revealBtn.addEventListener('click', () => {
+        const isHidden = answerDiv.style.display === 'none';
+        answerDiv.style.display = isHidden ? 'block' : 'none';
+        revealBtn.textContent = isHidden ? 'Hide Settings' : 'Reveal Settings';
+      });
     }
   });
 </script>

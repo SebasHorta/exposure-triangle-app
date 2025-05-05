@@ -3,12 +3,12 @@
 body {
   margin: 0;
   font-family: 'Josefin Sans', sans-serif;
-  background-color: #B3D4E0;  
-  color: #212529;
+  background-color: #ffffff;  
+  color: #363738;
 }
 
 .main-nav {
-  background-color: #EEE;
+  background-color: #8ac38e;
   border-bottom: 1px solid #CCC;
   padding: 1rem 2rem;
 }
@@ -27,13 +27,13 @@ body {
 .main-nav .logo .triangle {
   width: 0;
   height: 0;
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
-  border-bottom: 30px solid #000;
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-bottom: 35px solid #000;
   margin-right: 0.5rem;
 }
 .main-nav .logo .logo-text {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 600;
   color: #000;
 }
@@ -50,8 +50,9 @@ body {
   position: relative;
   text-decoration: none;
   font-size: 1.25rem;
-  color: #444;
+  color: #6c6a6a;
   transition: color 0.2s;
+  font-weight: bold;
 }
 .main-nav .nav-links a:hover {
   color: #000;
@@ -97,7 +98,7 @@ body {
 .home-hero .hero-text {
   font-size: 1.4rem;          
   max-width: 700px;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
   color: #333;
 }
 .home-hero .hero-buttons {
@@ -1474,9 +1475,4 @@ body {
   gap: 1.5rem;
   max-width: 600px;
   margin: 2rem auto;
-}
-
-/* Override interactive-controls style to hide if accidentally present */
-.interactive-controls {
-  display: none;
 }

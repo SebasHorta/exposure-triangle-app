@@ -28,20 +28,26 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Quiz functionality
+    // Quiz functionality: handle MC vs slider questions
     const quizForm = document.querySelector('form.quiz-form');
     if (quizForm) {
         const answerOptions = quizForm.querySelectorAll('input[type="radio"]');
+        const sliders = quizForm.querySelectorAll('input[type="range"]');
         const submitButton = quizForm.querySelector('button[type="submit"]');
         
-        // Enable submit button only when an answer is selected
-        submitButton.disabled = true;
-        
-        answerOptions.forEach(option => {
-            option.addEventListener('change', function() {
-                submitButton.disabled = false;
+        if (answerOptions.length > 0) {
+            // MC: disable submit until an option is selected
+            submitButton.disabled = true;
+            answerOptions.forEach(option => {
+                option.addEventListener('change', () => { submitButton.disabled = false; });
             });
-        });
+        } else if (sliders.length > 0) {
+            // Slider questions: enable submit and keep enabled on input
+            submitButton.disabled = false;
+            sliders.forEach(slider => {
+                slider.addEventListener('input', () => { submitButton.disabled = false; });
+            });
+        }
     }
     
     // Enhanced interactive slider functionality

@@ -121,14 +121,12 @@
         <div id="demo-feedback" class="quiz-feedback hidden">
           <p class="feedback-text"></p>
         </div>
-        
-        <button id="check-answer" class="quiz-btn">Check Settings</button>
       </div>
     </div>
   </div>
   
   <div class="lesson-nav quiz-nav">
-    <a href="{{ url_for('recap') }}" class="nav-btn">Back to Recap</a>
+    <a href="{{ url_for('learn', lesson_num=4) }}" class="nav-btn">Back to Recap</a>
     <a href="{{ url_for('quiz_route', question_num=1) }}" class="nav-btn test-btn">Start Quiz!</a>
   </div>
 </div>

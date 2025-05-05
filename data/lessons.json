@@ -2,7 +2,7 @@
   {
     "title": "ISO",
     "content": "ISO controls how sensitive your camera is to light. Higher ISO values make your camera more sensitive to light, which is useful in low-light conditions. However, higher ISO settings can introduce digital noise into your images. Lower ISO values are used in bright conditions and produce cleaner images with less noise.",
-    "image": "/static/images/iso.jpg",
+    "image": "https://via.placeholder.com/600x400?text=ISO",
     "slider_label": "ISO Setting",
     "slider_min": "1",
     "slider_max": "5",
@@ -12,7 +12,7 @@
   {
     "title": "Shutter Speed",
     "content": "Shutter speed determines how long your camera's sensor is exposed to light. Fast shutter speeds (like 1/1000s) freeze motion and are ideal for action photography. Slow shutter speeds (like 1/30s or longer) allow more light in and can create motion blur effects, perfect for capturing movement in scenes like flowing water or light trails.",
-    "image": "/static/images/shutter.jpg",
+    "image": "https://via.placeholder.com/600x400?text=Shutter+Speed",
     "slider_label": "Shutter Speed",
     "slider_min": "1",
     "slider_max": "5",
@@ -22,7 +22,7 @@
   {
     "title": "Aperture",
     "content": "Aperture controls how much light enters your camera through the lens opening. It's measured in f-stops (like f/2.8 or f/16). A smaller f-number (like f/2.8) means a wider aperture, which lets in more light and creates a shallow depth of field (background blur). A larger f-number (like f/16) means a narrower aperture, which provides greater depth of field, keeping more of the image in focus.",
-    "image": "/static/images/aperture.jpg",
+    "image": "https://via.placeholder.com/600x400?text=Aperture",
     "slider_label": "Aperture",
     "slider_min": "1",
     "slider_max": "5",

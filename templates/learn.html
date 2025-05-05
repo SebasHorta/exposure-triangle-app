@@ -19,6 +19,7 @@
         <img src="{{ lesson.image }}" alt="{{ lesson.title }}" class="lesson-img">
       </div>
       
+      {% if lesson_num < total_lessons %}
       <div class="interactive-controls">
         <div class="slider-container">
           <label for="lesson-slider">{{ lesson.slider_label|default('Adjust setting') }}</label>
@@ -33,20 +34,23 @@
           </div>
         </div>
       </div>
+      {% endif %}
     </div>
   </div>
   
   <div class="lesson-nav">
     {% if lesson_num > 1 %}
       <a href="{{ url_for('learn', lesson_num=lesson_num - 1) }}" class="nav-btn">Previous</a>
+    {% else %}
+      <a href="{{ url_for('guide') }}" class="nav-btn">Previous</a>
     {% endif %}
     
-    <a href="{{ url_for('quiz_route', question_num=1) }}" class="nav-btn test-btn">Test Yourself</a>
+    <a href="{{ url_for('quiz_format') }}" class="nav-btn test-btn">Test Yourself</a>
     
     {% if lesson_num < total_lessons %}
       <a href="{{ url_for('learn', lesson_num=lesson_num + 1) }}" class="nav-btn next-btn">Next</a>
     {% else %}
-      <a href="{{ url_for('quiz_route', question_num=1) }}" class="nav-btn next-btn">Next</a>
+      <a href="{{ url_for('examples_route') }}" class="nav-btn next-btn">Next</a>
     {% endif %}
   </div>
 </div>

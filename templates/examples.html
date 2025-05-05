@@ -28,8 +28,9 @@
   </div>
   
   <div class="lesson-nav">
-    <a href="{{ url_for('learn', lesson_num=3) }}" class="nav-btn">Back to Lessons</a>
-    <a href="{{ url_for('recap') }}" class="nav-btn next-btn">View Recap</a>
+    <a href="{{ url_for('guide') }}" class="nav-btn">Back to Lessons</a>
+    <a href="{{ url_for('quiz_format') }}" class="nav-btn test-btn">Test Yourself</a>
+    <a href="{{ url_for('learn', lesson_num=4) }}" class="nav-btn next-btn">View Recap</a>
   </div>
 </div>
 {% endblock %} 

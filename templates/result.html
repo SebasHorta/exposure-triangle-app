@@ -1,6 +1,3 @@
-<!-- Sebastian Horta -->
-<!-- result.html -->
-
 {% extends 'base.html' %}
 
 {% block title %}Quiz Results{% endblock %}
@@ -111,8 +108,8 @@
   {% endif %}
   
   <div class="lesson-nav">
-    <a href="{{ url_for('quiz_format') }}" class="nav-btn">Retake Quiz</a>
-    <a href="{{ url_for('recap') }}" class="nav-btn next-btn">View Recap</a>
+    <a href="{{ url_for('quiz_format') }}" class="nav-btn test-btn">Retake Quiz</a>
+    <a href="{{ url_for('learn', lesson_num=4) }}" class="nav-btn next-btn">View Recap</a>
   </div>
 </div>
 {% endblock %}

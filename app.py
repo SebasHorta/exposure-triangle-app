@@ -17,15 +17,27 @@ lessons = load_json_data('lessons.json')
 quiz = load_json_data('quiz.json')
 examples = load_json_data('examples.json')
 
-# Update image paths in lessons
+# Update image paths in lessons: convert relative filenames to static, skip external/static URLs
 for lesson in lessons:
-    if 'image' in lesson and not lesson['image'].startswith('/static'):
-        lesson['image'] = url_for('static', filename=f"images/{os.path.basename(lesson['image'])}")
+    if 'image' in lesson:
+        img = lesson['image']
+        # Skip external URLs or already static paths
+        if img.startswith('http://') or img.startswith('https://') or img.startswith('/static'):
+            continue
+        # Treat as filename relative to static/images
+        filename = os.path.basename(img)
+        lesson['image'] = url_for('static', filename=f"images/{filename}")
 
-# Update image paths in examples
+# Update image paths in examples: convert relative filenames to static, skip external/static URLs
 for example in examples:
-    if 'image' in example and not example['image'].startswith('/static'):
-        example['image'] = url_for('static', filename=f"images/{os.path.basename(example['image'])}")
+    if 'image' in example:
+        img = example['image']
+        # Skip external URLs or already static paths
+        if img.startswith('http://') or img.startswith('https://') or img.startswith('/static'):
+            continue
+        # Treat as filename relative to static/images
+        filename = os.path.basename(img)
+        example['image'] = url_for('static', filename=f"images/{filename}")
 
 @app.route('/')
 def home():
@@ -68,22 +80,30 @@ def quiz_route(question_num):
     # Initialize quiz_answers in session if it doesn't exist
     if 'quiz_answers' not in session:
         session['quiz_answers'] = []
-        
+
+    # Handle form submission
     if request.method == 'POST':
-        answer = request.form.get('answer')
-        
+        # Determine answer type: slider vs MC
+        question = quiz[question_num - 1]
+        if question.get('type') == 'slider':
+            # Combine slider answers in order
+            slider_answers = []
+            for slider in question.get('sliders', []):
+                key = f"{slider['id']}_answer"
+                slider_answers.append(request.form.get(key, ''))
+            answer = '|'.join(slider_answers)
+        else:
+            answer = request.form.get('answer')
+
         # Store answer in session
         quiz_answers = session.get('quiz_answers', [])
-        
-        # If we're submitting a previous question again, update that answer
         current_index = question_num - 1
         if current_index < len(quiz_answers):
             quiz_answers[current_index] = answer
         else:
             quiz_answers.append(answer)
-            
         session['quiz_answers'] = quiz_answers
-        
+
         # Redirect to next question
         next_question = question_num + 1
         if next_question > len(quiz):
@@ -104,7 +124,18 @@ def quiz_route(question_num):
         'total': len(quiz)
     }
     
-    return render_template('quiz.html', question=question, question_num=question_num, progress=progress)
+    # Prepare image source: external or static
+    img = question.get('image', '')
+    if img.startswith('http://') or img.startswith('https://'):
+        question['img_src'] = img
+    elif img:
+        question['img_src'] = url_for('static', filename=f"images/{img}")
+    else:
+        question['img_src'] = url_for('static', filename='images/triangle.jpg')
+
+    # Calculate progress percentage for template styling
+    progress_pct = (progress['current'] / progress['total']) * 100
+    return render_template('quiz.html', question=question, question_num=question_num, progress=progress, progress_pct=progress_pct)
 
 @app.route('/quiz/result')
 def result():

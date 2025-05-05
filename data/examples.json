@@ -5,11 +5,14 @@
     "intro": "Night photography requires balancing multiple settings to capture enough light while managing noise and motion blur.",
     "scenario": "You're photographing a city skyline at night with minimal ambient light. You have a tripod available.",
     "thought_question": "What happens when we adjust ISO in low light conditions?",
-    "image": "/static/images/iso.jpg",
+    "image": "https://via.placeholder.com/600x400?text=Night+Image",
     "scenario_type": "night",
     "iso_values": ["100", "400", "800", "1600", "3200"],
     "shutter_values": ["1/100s", "1/30s", "1/15s", "1/5s", "1s"],
-    "aperture_values": ["f/1.8", "f/2.8", "f/4", "f/8", "f/16"]
+    "aperture_values": ["f/1.8", "f/2.8", "f/4", "f/8", "f/16"],
+    "answer_iso_index": 5,
+    "answer_shutter_index": 2,
+    "answer_aperture_index": 1
   },
   {
     "id": "sports",
@@ -17,11 +20,14 @@
     "intro": "Sports and action photography requires settings that can freeze motion while maintaining proper exposure.",
     "scenario": "You're photographing athletes running on a field during daylight hours.",
     "thought_question": "What happens when we use a slower shutter speed for moving subjects?",
-    "image": "/static/images/shutter.jpg",
+    "image": "https://via.placeholder.com/600x400?text=Sports+Image",
     "scenario_type": "sports",
     "iso_values": ["100", "400", "800", "1600", "3200"],
     "shutter_values": ["1/2000s", "1/1000s", "1/500s", "1/250s", "1/125s"],
-    "aperture_values": ["f/2.8", "f/4", "f/5.6", "f/8", "f/11"]
+    "aperture_values": ["f/2.8", "f/4", "f/5.6", "f/8", "f/11"],
+    "answer_iso_index": 3,
+    "answer_shutter_index": 4,
+    "answer_aperture_index": 2
   },
   {
     "id": "landscape",
@@ -29,11 +35,14 @@
     "intro": "Landscape photography typically aims for maximum sharpness throughout the scene.",
     "scenario": "You're photographing a mountain landscape in bright daylight conditions.",
     "thought_question": "What happens when we use a narrow aperture for landscape scenes?",
-    "image": "/static/images/aperture.jpg",
+    "image": "https://via.placeholder.com/600x400?text=Landscape+Image",
     "scenario_type": "landscape",
     "iso_values": ["100", "200", "400", "800", "1600"],
     "shutter_values": ["1/500s", "1/250s", "1/125s", "1/60s", "1/30s"],
-    "aperture_values": ["f/4", "f/5.6", "f/8", "f/11", "f/16"]
+    "aperture_values": ["f/4", "f/5.6", "f/8", "f/11", "f/16"],
+    "answer_iso_index": 1,
+    "answer_shutter_index": 3,
+    "answer_aperture_index": 5
   },
   {
     "id": "portrait",
@@ -41,22 +50,13 @@
     "intro": "Portrait photography often uses specific settings to create pleasing subject isolation.",
     "scenario": "You're taking a portrait of someone outdoors in soft, late afternoon light.",
     "thought_question": "What happens when we use a wide aperture for portraits?",
-    "image": "/static/images/shutter.jpg",
+    "image": "https://via.placeholder.com/600x400?text=Portrait+Image",
     "scenario_type": "portrait",
     "iso_values": ["100", "200", "400", "800", "1600"],
     "shutter_values": ["1/500s", "1/250s", "1/125s", "1/60s", "1/30s"],
-    "aperture_values": ["f/1.8", "f/2.8", "f/4", "f/5.6", "f/8"]
-  },
-  {
-    "id": "combined",
-    "title": "Combining All Elements",
-    "intro": "Let's put everything together to understand how the three elements of the exposure triangle work together.",
-    "scenario": "Adjust the settings to see how they work together. Try different combinations for proper exposure.",
-    "thought_question": "What happens when we balance all three settings to maintain proper exposure?",
-    "image": "/static/images/triangle.jpg",
-    "scenario_type": "combined",
-    "iso_values": ["100", "400", "800", "1600", "3200"],
-    "shutter_values": ["1/1000s", "1/250s", "1/60s", "1/15s", "1s"],
-    "aperture_values": ["f/2.8", "f/4", "f/8", "f/11", "f/16"]
+    "aperture_values": ["f/1.8", "f/2.8", "f/4", "f/5.6", "f/8"],
+    "answer_iso_index": 1,
+    "answer_shutter_index": 3,
+    "answer_aperture_index": 1
   }
 ] 
