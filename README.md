@@ -1,12 +1,13 @@
-# Exposure-Triangle-App
+# Exposure Triangle App
 
 An interactive web lesson to teach beginner photographers the Exposure Triangle—ISO, shutter speed, and aperture.
 
 ## Features
-- Web-based learning interface
-- Step-by-step lessons with images
-- Interactive quiz to test understanding
-- Score summary at the end of quiz for user self-evaluation
+- Step-by-step learning guide
+- Interactive sliders on each lesson to visualize ISO, shutter speed, and aperture effects in real time
+- Hands-on example scenarios
+- Mixed-format quiz including both multiple-choice and slider-based exposure challenges
+- Detailed score summary and improvement areas at the end of the quiz
 
 ## Technology Stack
 - Flask
@@ -14,25 +15,52 @@ An interactive web lesson to teach beginner photographers the Exposure Triangle�
 - Javascript
 
 ## Project Structure
-- `app.py`: Main application logic and routing
-- `templates/`: HTML templates
-    - `home.html`, `learn.html`, `quiz.html`, `result.html`, `base.html`
-- `static/`: Static assets
-  - `css/main.css`: Custom styling
-  - `js/script.js`: JavaScript for interactivity
-  - `images/`: Lesson images (ISO, Shutter, Aperture, Triangle)
-- `data/`
-  - `lessons.json`: JSON file containing lesson data
-  - `quiz.json`: JSON file containing quiz questions and answers
+```
+/                      # Project root
+├─ app.py              # Flask application and routing
+├─ README.md           # Project documentation
+├─ data/
+│  ├─ lessons.json     # Lesson content and slider data
+│  ├─ examples.json    # Example scenarios and recommended answers
+│  └─ quiz.json        # Quiz questions (MC and slider types)
+├─ templates/
+│  ├─ base.html        # Base layout
+│  ├─ home.html        # Homepage
+│  ├─ guide.html       # Learning guide page
+│  ├─ learn.html       # Individual lesson pages (with interactive slider)
+│  ├─ examples.html    # List of example scenarios
+│  ├─ example.html     # Single example page (with sliders + feedback)
+│  ├─ quiz_format.html # Quiz introduction/format page
+│  ├─ quiz.html        # Quiz question page (MC & slider)
+│  ├─ result.html      # Quiz result and feedback page
+├─ static/
+│  ├─ css/
+│  │  └─ main.css      # All custom styles
+│  ├─ js/
+│  │  └─ script.js     # App and quiz interactivity logic
+│  └─ images/          # Image assets (placeholder & final photos)
+|-
+```
+
+## Dependencies
+Create and activate a virtual environment, then install requirements:
+```bash
+python3 -m venv ui-venv
+source ui-venv/bin/activate
+pip install Flask
+```
 
 ## Running the App
-1. Make sure Python and Flask are installed
-2. Run the application:
+1. Activate your venv (if you created one).
+2. Start the server:
    ```bash
    python app.py
    ```
-3. Open your browser and go to `http://localhost:5000`
+3. Open a browser and navigate to `http://localhost:5001` (default port 5001).
+4. Explore: Home → Guide → Lessons → Examples → Recap → Quiz
 
 ## Authors
-
-Analisa Wood, Joey Huang, Raunak Agrawal, Sebastian Horta
+- Analisa Wood
+- Joey Huang
+- Raunak Agrawal
+- Sebastian Horta
