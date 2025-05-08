@@ -77,14 +77,32 @@ def quiz_format():
 
 @app.route('/quiz/<int:question_num>', methods=['GET', 'POST'])
 def quiz_route(question_num):
-    # Initialize quiz_answers in session if it doesn't exist
-    if 'quiz_answers' not in session:
-        session['quiz_answers'] = []
-
+    # Load quiz questions
+    with open('data/quiz.json', 'r') as f:
+        quiz_questions = json.load(f)
+    
+    # Check if question number is valid
+    if question_num < 1 or question_num > len(quiz_questions):
+        return redirect(url_for('index'))
+    
+    # Get current question (0-indexed in the list)
+    question = quiz_questions[question_num - 1]
+    
+    # Fix image path for Flask url_for if needed
+    if 'image' in question and question['image'].startswith('images/'):
+        # The path is already relative to static
+        pass
+        
+    total_questions = len(quiz_questions)
+    progress = {
+        "current": question_num,
+        "total": total_questions
+    }
+    progress_pct = (question_num / total_questions) * 100
+    
     # Handle form submission
     if request.method == 'POST':
         # Determine answer type: slider vs MC
-        question = quiz[question_num - 1]
         if question.get('type') == 'slider':
             # Combine slider answers in order
             slider_answers = []
@@ -106,22 +124,15 @@ def quiz_route(question_num):
 
         # Redirect to next question
         next_question = question_num + 1
-        if next_question > len(quiz):
+        if next_question > len(quiz_questions):
             return redirect(url_for('result'))
         else:
             return redirect(url_for('quiz_route', question_num=next_question))
 
-    # Check if we've gone past the end of the quiz
-    if question_num > len(quiz):
-        return redirect(url_for('result'))
-
     # Display the current question
-    question = quiz[question_num - 1]
-    
-    # Add progress information
     progress = {
         'current': question_num,
-        'total': len(quiz)
+        'total': total_questions
     }
     
     # Prepare image source: external or static
@@ -133,8 +144,6 @@ def quiz_route(question_num):
     else:
         question['img_src'] = url_for('static', filename='images/triangle.jpg')
 
-    # Calculate progress percentage for template styling
-    progress_pct = (progress['current'] / progress['total']) * 100
     return render_template('quiz.html', question=question, question_num=question_num, progress=progress, progress_pct=progress_pct)
 
 @app.route('/quiz/result')
@@ -194,4 +203,4 @@ def debug():
     }, lesson_num=1, total_lessons=4)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5001)
+    app.run(debug=True, host='0.0.0.0', port=5018)

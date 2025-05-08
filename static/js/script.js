@@ -127,21 +127,22 @@ function updateInteractiveEffect(lessonTitle, value, imageElement, overlay) {
             break;
             
         case 'Shutter Speed':
-            // Slower shutter speed = more motion blur
-            const blurAmount = (1 - normalizedValue) * 10; // More blur for slower speeds
-            imageElement.style.filter = `blur(${blurAmount}px)`;
-            overlay.style.opacity = 0;
-            
-            // Motion trail effect for slower shutter speeds
-            if (value < 4) {
-                // Apply motion trails for slower shutter speeds
-                imageElement.style.transform = `scale(1.0${5 - value})`;
-                imageElement.style.opacity = 0.8 + (normalizedValue * 0.2);
+            // Sharper image for slower shutter speeds (reversed effect)
+            const sharpenAmount = (1 - normalizedValue) * 0.1; // Same magnitude, reversed direction
+            imageElement.style.filter = `contrast(${1 + sharpenAmount})`; // Increase contrast for sharper definition
+        
+            // Motion trail effect for faster shutter speeds (reversed effect)
+            if (value >= 4) {
+                // Apply subtle motion/zoom effect for faster shutter speeds
+                imageElement.style.transform = `scale(1.0 + (value - 4) * 0.05)`; // Subtle zoom for faster speeds
+                imageElement.style.opacity = 0.9 + ((1 - normalizedValue) * 0.05); // Reverse opacity trend
             } else {
                 imageElement.style.transform = 'scale(1)';
                 imageElement.style.opacity = 1;
             }
             break;
+    
+    
             
         case 'Aperture':
             // Wider aperture (lower f-number) = shallower depth of field (more blur)
@@ -151,14 +152,17 @@ function updateInteractiveEffect(lessonTitle, value, imageElement, overlay) {
             overlay.style.backdropFilter = `blur(${depthOfFieldBlur}px)`;
             overlay.style.backgroundColor = `rgba(255,255,255,${(1 - normalizedValue) * 0.2})`;
             
+            imageElement.style.filter = `brightness(${1.4 - normalizedValue * 0.3})`;
+
             // Create vignette effect for wider apertures
             if (value < 3) {
                 const vignetteAmount = (3 - value) * 10;
-                overlay.style.boxShadow = `inset 0 0 ${vignetteAmount}px rgba(0,0,0,0.5)`;
+                overlay.style.boxShadow = `inset 0 0 ${vignetteAmount}px rgba(0,0,0,0.25)`;
             } else {
                 overlay.style.boxShadow = 'none';
             }
             break;
+
             
         case 'Recap':
         case 'Test ISO':

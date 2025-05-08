@@ -86,8 +86,9 @@
     
     {% if question.type == 'slider' %}
       <div class="interactive-image-container">
-        <div class="interactive-image" id="quiz-image">
-          <img src="{{ question.image }}" alt="Quiz Question" class="quiz-img">
+        <div class="interactive-image" id="quiz-image" style="position: relative; height: 400px; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+          <img src="{{ question.img_src }}" alt="Quiz Question" id="quiz-img" class="quiz-img" style="max-width: 100%; max-height: 100%; object-fit: contain; transition: all 0.3s ease;">
+          <div class="interactive-overlay" id="quiz-overlay"></div>
         </div>
       </div>
     {% endif %}
@@ -107,50 +108,102 @@
     // Only apply slider logic on slider-type quiz questions
     if ("{{ question.type }}" !== "slider") return;
 
+    // Sanitize data-values attributes to ensure they're valid JSON
+    document.querySelectorAll('[data-values]').forEach(function(el) {
+      const attrValue = el.getAttribute('data-values');
+      try {
+        // Test if it's valid JSON
+        JSON.parse(attrValue);
+      } catch (e) {
+        // If not valid JSON, try to sanitize it
+        let sanitized = attrValue.replace(/'/g, '"');
+        // Ensure array brackets
+        if (!sanitized.startsWith('[')) sanitized = '[' + sanitized;
+        if (!sanitized.endsWith(']')) sanitized = sanitized + ']';
+        // Set the sanitized value
+        el.setAttribute('data-values', sanitized);
+      }
+    });
+
     const isoSlider = document.getElementById('iso-slider');
     const shutterSlider = document.getElementById('shutter-slider');
     const apertureSlider = document.getElementById('aperture-slider');
     const quizImage = document.getElementById('quiz-image');
-    const imageElement = quizImage.querySelector('img');
+    const imageElement = document.getElementById('quiz-img');
+    const overlay = document.getElementById('quiz-overlay');
 
-    // Create overlay for noise and depth effects
-    const overlay = document.createElement('div');
-    overlay.className = 'interactive-overlay';
-    Object.assign(overlay.style, {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      pointerEvents: 'none',
-      transition: 'all 0.3s ease'
-    });
-    quizImage.appendChild(overlay);
+    // Apply styles to overlay
+    if (overlay) {
+      Object.assign(overlay.style, {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        transition: 'all 0.3s ease',
+        zIndex: 2
+      });
+    }
 
+    // Pre-parse the values arrays to avoid JSON.parse during slider events
+    const isoValues = isoSlider ? safeParseJSON(isoSlider.getAttribute('data-values')) : [];
+    const shutterValues = shutterSlider ? safeParseJSON(shutterSlider.getAttribute('data-values')) : [];
+    const apertureValues = apertureSlider ? safeParseJSON(apertureSlider.getAttribute('data-values')) : [];
+    
     // Handle slider input events
     [isoSlider, shutterSlider, apertureSlider].forEach(slider => {
-      if (slider) slider.addEventListener('input', updatePreview);
+      if (slider) {
+        slider.addEventListener('input', updatePreview);
+      }
     });
 
     // Initial preview
     updatePreview();
 
+    // Safely parse JSON or return empty array if parsing fails
+    function safeParseJSON(jsonString) {
+      try {
+        return JSON.parse(jsonString) || [];
+      } catch (e) {
+        return [];
+      }
+    }
+
     function updatePreview() {
-      const isoValue = parseInt(isoSlider.value, 10);
-      const shutterValue = parseInt(shutterSlider.value, 10);
-      const apertureValue = parseInt(apertureSlider.value, 10);
+      // Get current values
+      const isoValue = parseInt(isoSlider ? isoSlider.value : 3, 10);
+      const shutterValue = parseInt(shutterSlider ? shutterSlider.value : 3, 10);
+      const apertureValue = parseInt(apertureSlider ? apertureSlider.value : 3, 10);
+      
       // Update display spans and hidden input values for each slider
-      [isoSlider, shutterSlider, apertureSlider].forEach(slider => {
-        const val = parseInt(slider.value, 10);
-        const valuesArr = JSON.parse(slider.getAttribute('data-values'));
-        const displayEl = document.getElementById(`${slider.id}-value`);
-        const hiddenEl = document.getElementById(`${slider.id}_hidden`);
-        if (valuesArr && displayEl) displayEl.textContent = valuesArr[val - 1];
-        if (valuesArr && hiddenEl) hiddenEl.value = valuesArr[val - 1];
-      });
+      if (isoSlider && isoValues.length > 0) {
+        const displayEl = document.getElementById('iso-slider-value');
+        const hiddenEl = document.getElementById('iso-slider_hidden');
+        if (displayEl) displayEl.textContent = isoValues[isoValue - 1] || '';
+        if (hiddenEl) hiddenEl.value = isoValues[isoValue - 1] || '';
+      }
+      
+      if (shutterSlider && shutterValues.length > 0) {
+        const displayEl = document.getElementById('shutter-slider-value');
+        const hiddenEl = document.getElementById('shutter-slider_hidden');
+        if (displayEl) displayEl.textContent = shutterValues[shutterValue - 1] || '';
+        if (hiddenEl) hiddenEl.value = shutterValues[shutterValue - 1] || '';
+      }
+      
+      if (apertureSlider && apertureValues.length > 0) {
+        const displayEl = document.getElementById('aperture-slider-value');
+        const hiddenEl = document.getElementById('aperture-slider_hidden');
+        if (displayEl) displayEl.textContent = apertureValues[apertureValue - 1] || '';
+        if (hiddenEl) hiddenEl.value = apertureValues[apertureValue - 1] || '';
+      }
+      
+      // Highlight active values in slider labels
       highlightValue('iso-slider', isoValue);
       highlightValue('shutter-slider', shutterValue);
       highlightValue('aperture-slider', apertureValue);
+      
+      // Apply image effects
       applyImageEffects(isoValue, shutterValue, apertureValue);
     }
 
@@ -170,22 +223,28 @@
     }
 
     function applyImageEffects(iso, shutter, aperture) {
+      // Normalize values to 0-1 range
       const isoNorm = (iso - 1) / 4;
       const shutterNorm = (shutter - 1) / 4;
       const apertureNorm = (aperture - 1) / 4;
 
-      const brightnessEffect = 0.7 + isoNorm * 0.8;
-      const blurAmount = Math.max(0, (1 - shutterNorm) * 8);
+      // Calculate effect amounts
+      const brightnessEffect = 0.7 + isoNorm * 0.8;  // Higher ISO = brighter
+      const blurAmount = Math.max(0, (1 - shutterNorm) * 8);  // Slower shutter = more blur
+      
+      // Apply effects to image
       imageElement.style.filter = `brightness(${brightnessEffect}) blur(${blurAmount}px)`;
 
+      // Apply ISO noise effect
       if (iso > 2) {
         const noiseOpacity = (iso - 2) * 0.15;
-        overlay.style.backgroundImage = 'url("data:image/svg+xml,%3Csvg viewBox=\"0 0 200 200\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cfilter id=\"noiseFilter\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.65\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3C/filter%3E%3Crect width=\"100%25\" height=\"100%25\" filter=\"url(%23noiseFilter)\"/%3E%3C/svg%3E")';
+        overlay.style.backgroundImage = 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")';
         overlay.style.opacity = noiseOpacity;
       } else {
         overlay.style.opacity = 0;
       }
 
+      // Apply aperture depth of field effect
       if (aperture > 2) {
         overlay.style.backdropFilter = 'none';
         overlay.style.boxShadow = 'none';

@@ -49,25 +49,25 @@
   {
     "type": "slider",
     "question": "Adjust the sliders to properly expose this night scene.",
-    "image": "https://via.placeholder.com/600x400?text=Night+Quiz",
+    "image": "nightcastle.jpg",
     "sliders": [
       {"id": "iso-slider", "label": "ISO", "steps": 5, "default_value": 3, "default_display_value": "400", "values": ["100", "200", "400", "800", "1600"]},
       {"id": "shutter-slider", "label": "Shutter Speed", "steps": 5, "default_value": 3, "default_display_value": "1/125s", "values": ["1s", "1/30s", "1/125s", "1/500s", "1/2000s"]},
       {"id": "aperture-slider", "label": "Aperture", "steps": 5, "default_value": 3, "default_display_value": "f/8", "values": ["f/2.8", "f/4", "f/8", "f/11", "f/16"]}
     ],
-    "correct": "800|1/30s|f/2.8",
+    "correct": "400|1/125s|f/8",
     "explanation": "For night scenes, a higher ISO, slower shutter speed, and wider aperture let in enough light to expose the image without excessive blur or noise."
   },
   {
     "type": "slider",
     "question": "Adjust the sliders to capture fast action in sports photography.",
-    "image": "https://via.placeholder.com/600x400?text=Sports+Quiz",
+    "image": "f1photography.jpg",
     "sliders": [
       {"id": "iso-slider", "label": "ISO", "steps": 5, "default_value": 3, "default_display_value": "400", "values": ["100", "400", "800", "1600", "3200"]},
       {"id": "shutter-slider", "label": "Shutter Speed", "steps": 5, "default_value": 3, "default_display_value": "1/500s", "values": ["1/2000s", "1/1000s", "1/500s", "1/250s", "1/125s"]},
       {"id": "aperture-slider", "label": "Aperture", "steps": 5, "default_value": 3, "default_display_value": "f/4", "values": ["f/2.8", "f/4", "f/5.6", "f/8", "f/11"]}
     ],
-    "correct": "400|1/2000s|f/2.8",
+    "correct": "400|1/500s|f/4",
     "explanation": "For sports action, a fast shutter speed, moderate ISO, and moderately wide aperture freeze motion while maintaining exposure."
   }
 ]

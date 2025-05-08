@@ -162,7 +162,7 @@
       const brightnessEffect = 0.7 + isoNorm * 0.8; // Range 0.7-1.5
       
       // Shutter: Affects motion blur
-      const blurAmount = Math.max(0, (1 - shutterNorm) * 8); // More blur for slower speeds
+      const blurAmount = Math.max(0, shutterNorm * 0.1); // More blur for slower speeds
       
       // Aperture: Affects depth of field
       const depthOfFieldBlur = (1 - apertureNorm) * 5; // More blur for wider apertures
@@ -180,14 +180,15 @@
       }
       
       // Aperture depth of field effect
-      if (aperture > 2) {
-        // For narrower apertures, create sharpness across the image
-        overlay.style.backdropFilter = 'none';
-        overlay.style.boxShadow = 'none';
+      if (aperture < 2) {
+        // Wider aperture (e.g., f/1.8): shallow depth of field, less blur, more vignette
+        const vignetteAmount = (2 - aperture) * 15; // More vignette for wider apertures
+        overlay.style.backdropFilter = 'none'; // Less blur
+        overlay.style.boxShadow = `inset 0 0 ${vignetteAmount}px rgba(0,0,0,0.5)`;
       } else {
-        // For wider apertures, add vignette and blur to simulate shallow depth of field
-        const vignetteAmount = (3 - aperture) * 15;
-        overlay.style.backdropFilter = `blur(${depthOfFieldBlur}px)`;
+        // Narrower aperture (e.g., f/8): deep depth of field, clear image, less vignette
+        const vignetteAmount = (aperture - 2) * 15; // More vignette for narrower apertures
+        overlay.style.backdropFilter = `blur(${depthOfFieldBlur}px)`; // More blur for narrow apertures
         overlay.style.boxShadow = `inset 0 0 ${vignetteAmount}px rgba(0,0,0,0.5)`;
       }
     }
